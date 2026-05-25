@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tic Tac Toe</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  h1 { margin-bottom: 0.5rem; }
+  #status {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    height: 1.5rem;
+  }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 6px;
+    background: #45475a;
+    padding: 6px;
+    border-radius: 8px;
+  }
+  .cell {
+    background: #313244;
+    border: none;
+    border-radius: 6px;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #cdd6f4;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .cell:hover:not(:disabled) { background: #585b70; }
+  .cell:disabled { cursor: default; }
+  .cell.x { color: #89b4fa; }
+  .cell.o { color: #f38ba8; }
+  .cell.win { background: #a6e3a1; color: #1e1e2e; }
+  #reset {
+    margin-top: 1.5rem;
+    padding: 0.6rem 1.4rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #89b4fa;
+    color: #1e1e2e;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  #reset:hover { background: #b4befe; }
+</style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <div id="status">X's turn</div>
+  <div id="board"></div>
+  <button id="reset">New Game</button>
+
+<script>
+  const board = document.getElementById('board');
+  const status = document.getElementById('status');
+  const resetBtn = document.getElementById('reset');
+  const wins = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  let cells = Array(9).fill('');
+  let turn = 'X';
+  let over = false;
+
+  function render() {
+    board.innerHTML = '';
+    cells.forEach((val, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'cell' + (val ? ' ' + val.toLowerCase() : '');
+      btn.textContent = val;
+      btn.disabled = !!val || over;
+      btn.addEventListener('click', () => play(i));
+      board.appendChild(btn);
+    });
+  }
+
+  function play(i) {
+    if (over || cells[i]) return;
+    cells[i] = turn;
+    const winLine = checkWin(turn);
+    if (winLine) {
+      over = true;
+      status.textContent = turn + ' wins!';
+      render();
+      [...board.children].forEach((c, idx) => {
+        if (winLine.includes(idx)) c.classList.add('win');
+      });
+      return;
+    }
+    if (cells.every(c => c)) {
+      over = true;
+      status.textContent = "It's a draw!";
+      render();
+      return;
+    }
+    turn = turn === 'X' ? 'O' : 'X';
+    status.textContent = turn + "'s turn";
+    render();
+  }
+
+  function checkWin(p) {
+    return wins.find(line => line.every(i => cells[i] === p)) || null;
+  }
+
+  function reset() {
+    cells = Array(9).fill('');
+    turn = 'X';
+    over = false;
+    status.textContent = "X's turn";
+    render();
+  }
+
+  resetBtn.addEventListener('click', reset);
+  render();
+</script>
+</body>
+</html>
