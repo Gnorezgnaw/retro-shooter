@@ -20,9 +20,21 @@ open shooter.html        # or any other .html file
 
 When verifying a change to a game, actually open it in the browser and play through the affected behavior — type checking and test suites do not exist here.
 
-## Git workflow (standing user rule)
+## Git workflow (standing user rule — IMPORTANT)
 
-The user has authorized a continuous git+GitHub workflow for this repo. After each meaningful change (a feature, a bug fix, a tuning pass), commit and push to `origin/main` without asking. Commit-message style is terse imperative subject, blank line, optional bullet body. Still ask before destructive operations (force-push, `reset --hard`, branch deletion).
+**As you do work, commit to git and push to GitHub regularly with clean commit messages so we never lose progress.** The user has explicitly and durably authorized this — do not ask before each commit/push for routine work.
+
+Cadence:
+- Commit + push after every meaningful unit of work (a feature added, a bug fixed, a tuning pass, a refactor, a doc update). Do not batch multiple unrelated changes into one commit.
+- Never leave the working tree dirty at the end of a turn that produced real changes. If you edited code, the turn ends with `git push` already done.
+- If a change spans multiple logical pieces, make multiple commits in order, then push.
+
+Commit-message style:
+- Terse imperative subject (≤72 chars), blank line, optional bullet body explaining *why* if non-obvious.
+- One concern per commit. Don't mix unrelated edits.
+- Use `HEREDOC` form when invoking `git commit -m` so formatting is preserved (see existing commit history for examples).
+
+Still confirm before destructive operations: `push --force`, `reset --hard`, branch deletion, history rewrites, anything that could overwrite or discard committed work.
 
 Remote: `https://github.com/Gnorezgnaw/retro-shooter` (default branch `main`).
 
